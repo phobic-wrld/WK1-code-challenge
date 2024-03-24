@@ -5,7 +5,7 @@
 #### By *Grace Joy *
 
 ## Description
-It's a webpage that shows different types of projects done
+It's a code-challenge that shows different types of projects done
 
 ## Installation
 You use git clone to be able to download the documents in the GitHub
