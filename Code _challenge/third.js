@@ -1,83 +1,92 @@
-const calculatePAYE = (basicSalary) => {
-    const taxBands = [
-      { band: 24000, rate: 10/100 },
-      { band: 16000, rate: 15/100 },
-      { band: 16000, rate: 20/100 },
-      { band: 56000, rate: 25/100 },
-      { band: Infinity, rate: 30/100 }
-    ];
-  
+function calculatePAYE(income) {
     let tax = 0;
-    let remainingSalary = basicSalary;
-  
-    for (const band of taxBands) {
-      if (remainingSalary <= 0) {
-        break;
-      }
-      const taxableAmount = Math.min(remainingSalary, band.band);
-      tax += taxableAmount * band.rate;
-      remainingSalary -= taxableAmount;
+    if (income <= 24000) {
+        tax = income * 0.1;
+    } else if (income <= 32333) {
+        tax = income * 0.25;
+    } else if (income <= 500000) {
+        tax = income * 0.30;
+    } else if (income <= 800000) {
+        tax = income * 0.325;
+    } else {
+        tax = income * 0.35;
     }
-  
     return tax;
-  };
-  
-  const calculateNHIFDeductions = (basicSalary) => {
-    const nhifBands = [
-      { band: 5999, rate: 150 },
-      { band: 7999, rate: 300 },
-      { band: 11999, rate: 400 },
-      { band: 14999, rate: 500 },
-      { band: 19999, rate: 600 },
-      { band: 24999, rate: 750 },
-      { band: 29999, rate: 850 },
-      { band: 34999, rate: 900 },
-      { band: 39999, rate: 1000 },
-      { band: 44999, rate: 1100 },
-      { band: 49999, rate: 1200 },
-      { band: 59999, rate: 1300 },
-      { band: 69999, rate: 1400 },
-      { band: 79999, rate: 1500 },
-      { band: 89999, rate: 1600 },
-      { band: 99999, rate: 1700 },
-      { band: Infinity, rate: 1800 }
-    ];
-  
-    let nhifRate = 0;
-    for (const band of nhifBands) {
-      if (basicSalary <= band.band) {
-        nhifRate = band.rate;
-        break;
-      }
+}
+
+function calculateNHIF(salary) {
+    let nhif = 0;
+    if (salary <= 5999) {
+        nhif = 150;
+    } else if (salary <= 7999) {
+        nhif = 300;
+    } else if (salary <= 11999) {
+        nhif = 400;
+    } else if (salary <= 14999) {
+        nhif = 500;
+    } else if (salary <= 19999) {
+        nhif = 600;
+    } else if (salary <= 24999) {
+        nhif = 750;
+    } else if (salary <= 29999) {
+        nhif = 850;
+    } else if (salary <= 34999) {
+        nhif = 900;
+    } else if (salary <= 39999) {
+        nhif = 950;
+    } else if (salary <= 44999) {
+        nhif = 1000;
+    } else if (salary <= 49999) {
+        nhif = 1100;
+    } else if (salary <= 59999) {
+        nhif = 1200;
+    } else if (salary <= 69999) {
+        nhif = 1300;
+    } else if (salary <= 79999) {
+        nhif = 1400;
+    } else if (salary <= 89999) {
+        nhif = 1500;
+    } else {
+        nhif = 1700;
     }
-  
-    return nhifRate;
-  };
-  
-  const calculateNSSF = (basicSalary) => {
-    const nssfRate = 0.06; // 6% of basic salary
-    return basicSalary * nssfRate;
-  };
-  
-  const calculateNetSalary = (basicSalary, benefits) => {
-    const tax = calculatePAYE(basicSalary);
-    const nhif = calculateNHIFDeductions(basicSalary);
-    const nssf = calculateNSSF(basicSalary);
-    
+    return nhif;
+}
+
+function calculateNSSF(salary) {
+    const nssfRate = 0.06;
+    return salary * nssfRate;
+}
+
+function calculateNetSalary(basicSalary, benefits) {
     const grossSalary = basicSalary + benefits;
-    const deductions = tax + nhif + nssf;
-    const netSalary = grossSalary - deductions;
-  
+
+    const tax = calculatePAYE(grossSalary);
+
+    const nhif = calculateNHIF(grossSalary);
+
+    const nssf = calculateNSSF(basicSalary);
+
+    const netSalary = grossSalary - tax - nhif - nssf;
+
     return {
-      grossSalary,
-      deductions: {
+        grossSalary,
         tax,
         nhif,
-        nssf
-      },
-      netSalary
+        nssf,
+        netSalary
     };
-  };
-  
- 
-  
+}
+
+const basicSalary = 50000;
+const benefits = 10000;
+
+const salaryDetails = calculateNetSalary(basicSalary, benefits);
+console.log("Gross Salary:", salaryDetails.grossSalary);
+console.log("Tax (PAYE):", salaryDetails.tax);
+console.log("NHIF Deductions:", salaryDetails.nhif);
+console.log("NSSF Deductions:", salaryDetails.nssf);
+console.log("Net Salary:", salaryDetails.netSalary);
+   
+   
+    
+    
